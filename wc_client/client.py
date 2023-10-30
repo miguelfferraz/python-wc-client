@@ -55,7 +55,7 @@ class WCClient:
         Returns:
             str: The full url
         """
-        return f"{self.domain}{endpoint}"
+        return f"{self.domain}/{endpoint}"
 
     def get(self, endpoint: str, headers: Dict = {}) -> httpx.Response:
         """
