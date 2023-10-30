@@ -16,6 +16,7 @@ def test_build_url():
 
     assert builded_url == f"{URL}/orders"
 
+
 def test_get_data(mocker):
     mock_response = mocker.Mock()
     mock_response.status_code = 200
@@ -27,6 +28,7 @@ def test_get_data(mocker):
 
     assert response.status_code == 200
     assert response.text == "Mocked GET request"
+
 
 def test_post_data(mocker):
     mock_response = mocker.Mock()
