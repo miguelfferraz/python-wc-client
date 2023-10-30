@@ -23,9 +23,9 @@ dynamic = ["version"]
 
 
 [project.urls]
-Documentation = "https://github.com/miguelfferraz/python-woocommerce-client/tree/main#readme"
-Source = "https://github.com/miguelfferraz/python-woocommerce-client"
-Tracker = "https://github.com/miguelfferraz/python-woocommerce-client/issues"
+Documentation = "https://github.com/miguelfferraz/python-wc-client/tree/main#readme"
+Source = "https://github.com/miguelfferraz/python-wc-client"
+Tracker = "https://github.com/miguelfferraz/python-wc-client/issues"
 
 [tool.hatch.version]
 path = "wc_client/__init__.py"
