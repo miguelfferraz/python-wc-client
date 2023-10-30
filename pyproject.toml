@@ -6,7 +6,7 @@ build-backend = "hatchling.build"
 name = "wc_client"
 description = "A small client for WooCommerce."
 readme = "README.md"
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 license = "MIT"
 authors = [
     { name = "Miguel Figueira Ferraz", email = "miguelfigueiraferraz@gmail.com" },
