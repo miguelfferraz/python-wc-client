@@ -6,7 +6,6 @@ build-backend = "hatchling.build"
 name = "wc_client"
 description = "A small client for WooCommerce."
 readme = "README.md"
-version = "0.0.1"
 requires-python = ">=3.7"
 license = "MIT"
 authors = [
@@ -19,8 +18,14 @@ classifiers = [
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
 ]
+dependencies = ["httpx>=0.25.0"]
+dynamic = ["version"]
+
 
 [project.urls]
 Documentation = "https://github.com/miguelfferraz/python-woocommerce-client/tree/main#readme"
 Source = "https://github.com/miguelfferraz/python-woocommerce-client"
 Tracker = "https://github.com/miguelfferraz/python-woocommerce-client/issues"
+
+[tool.hatch.version]
+path = "wc_client/__init__.py"
