@@ -4,11 +4,7 @@ URL = "https://api.domain.com"
 KEY = "key"
 SECRET = "secret"
 
-mock_wc_client = WCClient(
-    domain=URL,
-    consumer_key=KEY,
-    consumer_secret=SECRET
-)
+mock_wc_client = WCClient(domain=URL, consumer_key=KEY, consumer_secret=SECRET)
 
 
 def test_build_url():

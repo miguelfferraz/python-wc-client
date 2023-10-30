@@ -22,12 +22,10 @@ class WCClient:
             Tuple[str, str]: The authentication token
         """
         auth_str = f"{self.consumer_key}:{self.consumer_secret}"
-        enconded_auth = base64.b64encode(auth_str.encode("utf-8")).decode(
-            "utf-8"
-        )
+        enconded_auth = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
         return f"Basic {enconded_auth}"
 
-    def _build_headers(self, headers: Dict = None) -> Dict[str, str]:
+    def _build_headers(self, headers: Dict | None = None) -> Dict[str, str]:
         """
         Returns the headers for the request, including the Authorization
 
@@ -72,9 +70,7 @@ class WCClient:
             url=self._build_url(endpoint), headers=self._build_headers(headers)
         )
 
-    def post(
-        self, endpoint: str, data: Dict, headers: Dict = {}
-    ) -> httpx.Response:
+    def post(self, endpoint: str, data: Dict, headers: Dict = {}) -> httpx.Response:
         """
         Perform a POST request to the specified endpoint
 
