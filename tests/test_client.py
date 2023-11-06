@@ -1,39 +1,30 @@
+import pytest
 from wc_client import WCClient
 
-URL = "https://api.domain.com"
-KEY = "key"
-SECRET = "secret"
 
-mock_wc_client = WCClient(domain=URL, consumer_key=KEY, consumer_secret=SECRET)
-
-
-def test_build_url():
-    builded_url = mock_wc_client._build_url("orders")
-
-    assert builded_url == f"{URL}/orders"
+@pytest.fixture
+def wc_client():
+    return WCClient("example.com", "consumer_key", "consumer_secret")
 
 
-def test_get_data(mocker):
-    mock_response = mocker.Mock()
-    mock_response.status_code = 200
-    mock_response.text = "Mocked GET request"
+# Test cases
+def test_get_token(wc_client):
+    token = wc_client._get_token()
 
-    mocker.patch("httpx.get", return_value=mock_response)
-
-    response = mock_wc_client.get("orders")
-
-    assert response.status_code == 200
-    assert response.text == "Mocked GET request"
+    # auth token is base64 encoded 'consumer_key:consumer_secret'
+    expected_token = "Basic Y29uc3VtZXJfa2V5OmNvbnN1bWVyX3NlY3JldA=="
+    assert token == expected_token
 
 
-def test_post_data(mocker):
-    mock_response = mocker.Mock()
-    mock_response.status_code = 201
-    mock_response.text = "Mocked POST request"
+def test_default_headers(wc_client):
+    headers = wc_client._default_headers
+    assert "Accept" in headers
+    assert "User-Agent" in headers
+    assert "Authorization" in headers
 
-    mocker.patch("httpx.post", return_value=mock_response)
 
-    response = mock_wc_client.post("orders", {"data": "data"})
-
-    assert response.status_code == 201
-    assert response.text == "Mocked POST request"
+def test_getattr(wc_client):
+    name = "products"
+    wc_request = wc_client.__getattr__(name)
+    assert wc_request.base_url == "example.com"
+    assert wc_request.headers == wc_client._default_headers
