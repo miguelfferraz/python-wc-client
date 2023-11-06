@@ -22,7 +22,9 @@ class WCClient:
             str: The authentication token
         """
         auth_str = f"{self.consumer_key}:{self.consumer_secret}"
-        enconded_auth = base64.b64encode(auth_str.encode("utf-8")).decode("utf-8")
+        enconded_auth = base64.b64encode(auth_str.encode("utf-8")).decode(
+            "utf-8"
+        )
         return f"Basic {enconded_auth}"
 
     @property
