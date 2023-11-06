@@ -21,11 +21,11 @@ class WCRequest:
             *args: The path for the request
         """
         self.base_url = base_url
-        self.args = args
+        self.args = list(map(str, args))
         self.headers = headers
 
         self._url_path = [base_url]
-        self._url_path.extend(args)
+        self._url_path.extend(self.args)
 
         self.client = httpx.Client(headers=headers)
 
@@ -36,6 +36,7 @@ class WCRequest:
         Returns:
             str: The URL for the request
         """
+        print(self._url_path)
         return "/".join(self._url_path)
 
     def _update_headers(self, headers):
