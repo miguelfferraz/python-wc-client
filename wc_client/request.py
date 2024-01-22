@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 import httpx
 
@@ -9,6 +9,7 @@ class WCRequest:
     """
 
     METHODS = {"delete", "get", "patch", "post", "put"}
+    DEFAULT_PAGE_LIMIT = 20
 
     def __init__(self, base_url: str, headers: Dict, *args):
         """
@@ -36,7 +37,6 @@ class WCRequest:
         Returns:
             str: The URL for the request
         """
-        print(self._url_path)
         return "/".join(self._url_path)
 
     def _update_headers(self, headers):
@@ -82,6 +82,37 @@ class WCRequest:
                 )
 
             return make_request
+        
+        elif resource == "paginated":
+            
+            def make_request_paginated(query_params={}, headers=None) -> List[Dict]:
+                if headers:
+                    self._update_headers(headers)
 
+                query_params["per_page"] = self.DEFAULT_PAGE_LIMIT
+                query_params["page"] = 1
+
+                data = []
+
+                with self.client as client:
+                    while True:
+                        res = client.get(
+                            url=self._build_url(),
+                            headers=self.headers,
+                            params=query_params.copy(),
+                        )
+
+                        res_json = res.json()
+                        data.extend(res_json)
+
+                        if len(res_json) == 0:
+                            break
+
+                        query_params["page"] += 1
+
+                return data
+
+            return make_request_paginated
+                
         else:
             return self._(resource)
