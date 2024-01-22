@@ -1,3 +1,4 @@
+import json
 import pytest
 from unittest.mock import MagicMock
 from wc_client.request import WCRequest
@@ -7,6 +8,12 @@ class MockResponse:
     def __init__(self, content, status_code=200):
         self.content = content
         self.status_code = status_code
+
+    def json(self):
+        # Decode bytes to string
+        json_str = self.content.decode("utf-8")
+        # Convert string to dict
+        return json.loads(json_str)
 
 
 @pytest.fixture
@@ -74,3 +81,49 @@ def test_make_request(wc_request):
     )
     assert response.status_code == 200
     assert response.content == b'{"key": "value"}'
+
+
+def test_make_request_paginated(wc_request):
+    # Mocking httpx.Client.get for the paginated case
+    client = MagicMock()
+    client.__enter__.return_value = client
+    client.__exit__.return_value = False
+    client.get.side_effect = [
+        MockResponse(b'[{"foo": "bar"}, {"fizz": "buzz"}]', 200),
+        MockResponse(b'[]', 200),
+    ]
+    wc_request.client = client
+
+    data = wc_request.paginated(
+        query_params={"param": "value"}, headers={"Authorization": "foo-bar"}
+    )
+
+    assert client.get.call_count == 2
+
+    calls = client.get.call_args_list
+    first_call = calls[0].kwargs
+    second_call = calls[1].kwargs
+
+    assert first_call["url"] == "https://example.com/consumer/orders/1"
+    assert first_call["headers"] == {
+        "Accept": "application/json",
+        "Authorization": "foo-bar",
+    }
+    assert first_call["params"] == {
+        "param": "value",
+        "per_page": WCRequest.DEFAULT_PAGE_LIMIT,
+        "page": 1,
+    }
+
+    assert second_call["url"] == "https://example.com/consumer/orders/1"
+    assert second_call["headers"] == {
+        "Accept": "application/json",
+        "Authorization": "foo-bar",
+    }
+    assert second_call["params"] == {
+        "param": "value",
+        "per_page": WCRequest.DEFAULT_PAGE_LIMIT,
+        "page": 2,
+    }
+
+    assert data == [{"foo": "bar"}, {"fizz": "buzz"}]
