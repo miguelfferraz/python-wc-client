@@ -90,7 +90,7 @@ def test_make_request_paginated(wc_request):
     client.__exit__.return_value = False
     client.get.side_effect = [
         MockResponse(b'[{"foo": "bar"}, {"fizz": "buzz"}]', 200),
-        MockResponse(b'[]', 200),
+        MockResponse(b"[]", 200),
     ]
     wc_request.client = client
 

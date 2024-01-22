@@ -82,9 +82,9 @@ class WCRequest:
                 )
 
             return make_request
-        
+
         elif resource == "paginated":
-            
+
             def make_request_paginated(query_params={}, headers=None) -> List[Dict]:
                 if headers:
                     self._update_headers(headers)
@@ -113,6 +113,6 @@ class WCRequest:
                 return data
 
             return make_request_paginated
-                
+
         else:
             return self._(resource)
